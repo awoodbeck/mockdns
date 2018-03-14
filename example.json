@@ -1,0 +1,99 @@
+{
+    "test1.com.": {
+        "a": [
+            {
+                "hostname": "www1",
+                "value": "10.0.1.1"
+            },
+            {
+                "hostname": "www2.test1.com.",
+                "value": "10.0.1.2"
+            }
+        ],
+        "aaaa": [
+            {
+                "hostname": "www1",
+                "value": "fd12:3456:789a:1::1"
+            }
+        ],
+        "cname": [
+            {
+                "hostname": "mail",
+                "value": "ghs.google.com"
+            }
+        ],
+        "mx": [
+            {
+                "hostname": "@",
+                "value": "aspmx.l.google.com.",
+                "ttl": "1800",
+                "priority": "10"
+            }
+        ],
+        "ns": [
+            {
+                "hostname": "@",
+                "value": "localhost",
+                "ttl": "1800"
+            }
+        ],
+        "txt": [
+            {
+                "hostname": "@",
+                "value": "v=spf1 a aaaa mx include:_spf.google.com ~all"
+            }
+        ]
+    },
+    "test2.com.": {
+        "a": [
+            {
+                "hostname": "www1",
+                "value": "10.0.1.1"
+            },
+            {
+                "hostname": "www2.test2.com.",
+                "value": "10.0.1.2"
+            }
+        ],
+        "aaaa": [
+            {
+                "hostname": "www1",
+                "value": "fd12:3456:789a:1::1"
+            }
+        ],
+        "cname": [
+            {
+                "hostname": "mail",
+                "value": "ghs.google.com"
+            }
+        ],
+        "mx": [
+            {
+                "hostname": "@",
+                "value": "aspmx.l.google.com.",
+                "ttl": "1800",
+                "priority": "10"
+            }
+        ],
+        "ns": [
+            {
+                "value": "localhost",
+                "ttl": "1800"
+            }
+        ],
+        "txt": [
+            {
+                "hostname": "@",
+                "value": "v=spf1 a aaaa mx include:_spf.google.com ~all"
+            }
+        ]
+    },
+    "1.0.0.10.in-addr.arpa.": {
+        "ptr": [
+            {
+            "hostname": "1.0.0.10.in-addr.arpa.",
+            "value": "www1.test1.com."
+            }
+        ]
+    }
+}
