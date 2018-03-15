@@ -27,6 +27,7 @@ var (
 	addr,
 	dataFile,
 	defaultTTL string
+	verbose            bool
 	errNilMapUnmarshal = errors.New("cannot unmarshal into nil map")
 
 	supportedTypes = map[string]uint16{
@@ -45,6 +46,7 @@ func init() {
 	flag.StringVar(&addr, "addr", "127.0.0.1:8053", "default listening address")
 	flag.StringVar(&dataFile, "data", "", "DNS record data file")
 	flag.StringVar(&defaultTTL, "ttl", "3600", "default TTL")
+	flag.BoolVar(&verbose, "v", true, "verbose output")
 }
 
 func main() {
@@ -113,7 +115,9 @@ func handler(recs records) func(dns.ResponseWriter, *dns.Msg) {
 		m := new(dns.Msg)
 		m.SetReply(r)
 
-		log.Printf("Incoming request: %#v\n", r)
+		if verbose {
+			log.Printf("Incoming request:\n%s######\n\n", r)
+		}
 
 		// answer
 		for _, question := range r.Question {
