@@ -115,6 +115,7 @@ func handler(recs records) func(dns.ResponseWriter, *dns.Msg) {
 
 		log.Printf("Incoming request: %#v\n", r)
 
+		// answer
 		for _, question := range r.Question {
 			if question.Qtype == dns.TypeANY {
 				for _, rrs := range recs.data {
@@ -125,6 +126,19 @@ func handler(recs records) func(dns.ResponseWriter, *dns.Msg) {
 					m.Answer = append(m.Answer, rrs...)
 				}
 			}
+		}
+
+		// authority
+		if rrs, ok := recs.data[dns.TypeNS]; ok {
+			m.Ns = append(m.Ns, rrs...)
+		}
+
+		// additional
+		if rrs, ok := recs.data[dns.TypeA]; ok {
+			m.Extra = append(m.Extra, rrs...)
+		}
+		if rrs, ok := recs.data[dns.TypeAAAA]; ok {
+			m.Extra = append(m.Extra, rrs...)
 		}
 
 		w.WriteMsg(m)
