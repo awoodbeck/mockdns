@@ -13,6 +13,7 @@ import (
 	"sync"
 	"syscall"
 
+	"github.com/fatih/color"
 	"github.com/miekg/dns"
 )
 
@@ -40,6 +41,9 @@ var (
 		"PTR":   dns.TypePTR,
 		"TXT":   dns.TypeTXT,
 	}
+
+	cFailure = color.New(color.FgRed)
+	cSuccess = color.New(color.FgGreen)
 )
 
 func init() {
@@ -92,6 +96,8 @@ func serve(ctx context.Context, addr, net string, d data) {
 		dns.HandleFunc(domain, handler(recs))
 	}
 
+	dns.HandleFunc(".", catchAllHandler)
+
 	server := &dns.Server{Addr: addr, Net: net, TsigSecret: nil}
 
 	go func() {
@@ -110,14 +116,28 @@ func serve(ctx context.Context, addr, net string, d data) {
 	log.Printf("%s/%s listener stopped\n", addr, net)
 }
 
+func catchAllHandler(w dns.ResponseWriter, r *dns.Msg) {
+	if verbose {
+		for _, q := range r.Question {
+			log.Printf("[%s]: %s", cFailure.Sprint("F"), q.String())
+		}
+	}
+
+	m := new(dns.Msg)
+	m.SetRcode(r, dns.RcodeServerFailure)
+	w.WriteMsg(m)
+}
+
 func handler(recs records) func(dns.ResponseWriter, *dns.Msg) {
 	return func(w dns.ResponseWriter, r *dns.Msg) {
+		if verbose {
+			for _, q := range r.Question {
+				log.Printf("[%s]: %s", cSuccess.Sprint("S"), q.String())
+			}
+		}
+
 		m := new(dns.Msg)
 		m.SetReply(r)
-
-		if verbose {
-			log.Printf("Incoming request:\n%s######\n\n", r)
-		}
 
 		// answer
 		for _, question := range r.Question {
